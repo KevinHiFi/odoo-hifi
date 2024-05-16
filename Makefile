@@ -39,7 +39,7 @@ define update_addons
 endef
 
 define start_docker_container
-    docker compose -f ${PATH_TO_DOCKER_CONFIGURATION} up -d
+    docker compose -f ${PATH_TO_DOCKER_CONFIGURATION} up
 endef
 
 define stop_docker_container
