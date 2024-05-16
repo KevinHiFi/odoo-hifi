@@ -1,0 +1,22 @@
+stages:
+  - package
+
+package_addons:
+  stage: package
+  image: alpine:latest
+  script:
+    - apk add --update zip  # Installing zip on Alpine Linux
+    - cd docker/odoo_addons
+    - |
+      for d in */ ; do
+        if [ -d "$d" ]; then
+          base=$(basename "$d")
+          zip -r "../../$base.zip" "$d"
+        fi
+      done
+  artifacts:
+    paths:
+      - "*.zip"
+    expire_in: 1 week
+  only:
+    - main

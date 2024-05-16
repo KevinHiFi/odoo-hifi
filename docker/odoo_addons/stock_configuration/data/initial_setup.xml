@@ -1,0 +1,5 @@
+<odoo>
+    <data noupdate="1">
+        <function model="stock.settings" name="apply_initial_settings"/>
+    </data>
+</odoo>

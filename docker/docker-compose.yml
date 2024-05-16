@@ -1,0 +1,54 @@
+services:
+  postgres:
+    container_name: hifi_extra_postgres
+    hostname: hifi_extra_postgres
+    build: .
+    restart: unless-stopped
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: soniverse
+      PGDATA: /var/lib/postgresql/data
+    ports:
+      - "54321:5432"
+    networks:
+      hifi_extra_network:
+  pgadmin4:
+    image: elestio/pgadmin:REL-8_5
+    restart: unless-stopped
+    volumes:
+      - ./data/pgadmin4:/pgadmin4/servers.json
+    environment:
+      PGADMIN_DEFAULT_EMAIL: 'info@soniverse.de'
+      PGADMIN_DEFAULT_PASSWORD: soniverse
+      PGADMIN_LISTEN_PORT: 8080
+    depends_on:
+      - postgres
+    ports:
+      - "58080:8080"
+    networks:
+      hifi_extra_network:
+  odoo:
+    container_name: hifi_extra_odoo
+    hostname: hifi_extra_odoo
+    image: odoo:17
+    restart: unless-stopped
+    volumes:
+      - ./odoo_config/odoo.conf:/etc/odoo/odoo.conf
+      - ./odoo_addons:/mnt/extra-addons
+      - ./data/odoo:/var/lib/odoo
+    environment:
+      HOST: hifi_extra_postgres
+      PORT: 5432
+      USER: odoo_user
+      PASSWORD: hdVg4SQB2pEuUFaYLtGzDbn8N7JCk6Zf9sKTAWwjmMPyrevRH3
+    ports:
+      - "58069:8069"
+    networks:
+      hifi_extra_network:
+
+networks:
+  hifi_extra_network:
+    name: hifi_extra_network
+    ipam:
+      driver: default
